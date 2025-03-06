@@ -37,7 +37,7 @@ export class SLMarketplaceWorkflow {
         // Handle cookie popup AFTER login / precaution.
         await handleCookiePopup(this.page);
     }
-    
+
     async goToMerchantHome() { 
         // Navigate to our merchant store.
         console.log("🔍 Looking for the username dropdown...");
@@ -60,5 +60,26 @@ export class SLMarketplaceWorkflow {
         await this.page.click(this.config.selectors.merchantHome);
 
         console.log("✅ Successfully navigated to Merchant Home.");
+    }
+
+    async verifyMerchantHome() {
+        console.log("🔍 Verifying Merchant Home page...");
+        await this.page.waitForSelector(this.config.selectors.merchantHomeHeader, { timeout: 10000 });
+        console.log("✅ Merchant Home verified!");       
+    }
+
+    async goToInventory() {
+        console.log("🔍 Looking for 'Inventory' link...");   
+        await this.page.waitForSelector(this.config.selectors.inventoryLink, { timeout: 10000 });    
+        console.log("🖱️ Clicking 'Inventory'...");
+        await this.page.click(this.config.selectors.inventoryLink);
+
+        console.log("✅ Navigated to Inventory.");
+    }
+
+    async verifyManageListings() { 
+        console.log("🔍 Verifying Manage Listings page...");
+        await this.page.waitForSelector(this.config.selectors.manageListingsHeader, { timeout: 10000 });
+        console.log("✅ Manage Listings verified!");       
     }
 }
