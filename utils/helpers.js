@@ -1,5 +1,14 @@
 import { chromium } from 'playwright';
 
+// Browser setup. // We can add more browsers here, and update with a fw.config to select the browser to launch with. 
+export async function launchBrowser() {
+    console.log("🚀 Launching browser...");
+    const browser = await chromium.launch({ headless: false });
+    const page = await browser.newPage();
+
+    return { browser, page };
+}
+
 // Helper handler for cookie popup
 export async function handleCookiePopup(page) {
     const acceptButtonSelector = '#onetrust-accept-btn-handler'; // Correct selector
@@ -18,13 +27,4 @@ export async function handleCookiePopup(page) {
     } catch (error) {
         console.log("⚠️ Error handling cookie popup:", error);
     }
-}
-
-// Browser setup.
-export async function launchBrowser() {
-    console.log("🚀 Launching browser...");
-    const browser = await chromium.launch({ headless: false });
-    const page = await browser.newPage();
-
-    return { browser, page };
 }

@@ -6,6 +6,12 @@ export class SLMarketplaceWorkflow {
         this.config = config;
         this.credentials = credentials;
     }
+
+    async navigateTo(url) {
+        console.log(`🔗 Navigating to: ${url}`);
+        await this.page.goto(url);
+    }
+
     async login() {
         // Navigate to the sign in page and action. 
         console.log("🔍 Looking for 'Sign In' button...");
@@ -31,9 +37,28 @@ export class SLMarketplaceWorkflow {
         // Handle cookie popup AFTER login / precaution.
         await handleCookiePopup(this.page);
     }
+    
+    async goToMerchantHome() { 
+        // Navigate to our merchant store.
+        console.log("🔍 Looking for the username dropdown...");
+        let merchant = this.credentials.username;
+        await this.page.waitForSelector(`span:has-text("${merchant}")`, { timeout: 10000 });
+                // Logged in user, dropdown list 
+        console.log("🖱️ Clicking username dropdown...");
+        await this.page.click(`span:has-text("${merchant}")`);
 
-    async navigateTo(url) {
-        console.log(`🔗 Navigating to: ${url}`);
-        await this.page.goto(url);
+        // My marketplace dropdown.
+        console.log("🔍 Looking for 'My Marketplace'...");
+        await this.page.waitForSelector(this.config.selectors.myMarketplace, { timeout: 10000 });
+        console.log("🖱️ Clicking 'My Marketplace'...");
+        await this.page.click(this.config.selectors.myMarketplace);
+
+        // merchant marketplace store dropdown list. 
+        console.log("🔍 Looking for 'Merchant Home'...");
+        await this.page.waitForSelector(this.config.selectors.merchantHome, { timeout: 10000 });
+        console.log("🖱️ Clicking 'Merchant Home'...");
+        await this.page.click(this.config.selectors.merchantHome);
+
+        console.log("✅ Successfully navigated to Merchant Home.");
     }
 }

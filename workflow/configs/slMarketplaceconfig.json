@@ -4,6 +4,11 @@
         "signInButton": ".nav__signin",
         "usernameField": "#username",
         "passwordField": "#password",
-        "loginButton": ".login-btn"
+        "loginButton": ".login-btn",
+        "myMarketplace": "a.submenu-button:has-text('My Marketplace')",
+        "merchantHome": "a:has-text('Merchant home')",
+        "merchantHomeHeader": "h1:has-text('Merchant home')",
+        "inventoryLink": "a.off:has-text('Inventory')",
+        "manageListingsHeader": "h1:has-text('Manage listings')"
     }
   }

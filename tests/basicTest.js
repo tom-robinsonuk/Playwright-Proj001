@@ -17,12 +17,10 @@ const credentials = JSON.parse(fs.readFileSync('./workflow/credentials.json', 'u
     const { browser, page } = await launchBrowser();
 
      // Initialise the workflow
-     const slMarketplace = new SLMarketplaceWorkflow(page, config, credentials);
-     await slMarketplace.navigateTo(config.url);
-     
-     // Perform login
+    const slMarketplace = new SLMarketplaceWorkflow(page, config, credentials);
+    await slMarketplace.navigateTo(config.url);
     await slMarketplace.login();
-
+    await slMarketplace.goToMerchantHome();
     // Cleanup.
     console.log("⌛ Waiting before closing browser...");
     await page.waitForTimeout(5000);
