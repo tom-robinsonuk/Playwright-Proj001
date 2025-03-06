@@ -1,11 +1,15 @@
 import { chromium } from 'playwright';
 import fs from 'fs';
-import { SLMarketplaceWorkflow } from '../workflow/scripts/slMarketplaceWorkflow.js';
 import { handleCookiePopup } from '../utils/helpers.js'; // Import helpers
 
-// Read config files
-const config = JSON.parse(fs.readFileSync('./workflow/config.json', 'utf8'));
+// Specify the workflow to use
+import { SLMarketplaceWorkflow } from '../workflow/scripts/slMarketplaceWorkflow.js';
+// Read config files for the specified workflow
+const config = JSON.parse(fs.readFileSync('./workflow/configs/slMarketplaceconfig.json', 'utf8'));
 const credentials = JSON.parse(fs.readFileSync('./workflow/credentials.json', 'utf8'));
+
+// Can add in an additional config param later on, which decides what walkthrough to use, this way we can have an additional script -
+// containing case/conditional statements to determine which workflow to use. 
 
 (async () => {
     console.log("🚀 Launching browser...");
