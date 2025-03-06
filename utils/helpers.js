@@ -1,3 +1,6 @@
+import { chromium } from 'playwright';
+
+// Helper handler for cookie popup
 export async function handleCookiePopup(page) {
     const acceptButtonSelector = '#onetrust-accept-btn-handler'; // Correct selector
 
@@ -15,4 +18,13 @@ export async function handleCookiePopup(page) {
     } catch (error) {
         console.log("⚠️ Error handling cookie popup:", error);
     }
+}
+
+// Browser setup.
+export async function launchBrowser() {
+    console.log("🚀 Launching browser...");
+    const browser = await chromium.launch({ headless: false });
+    const page = await browser.newPage();
+
+    return { browser, page };
 }

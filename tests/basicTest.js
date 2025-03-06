@@ -1,6 +1,6 @@
 import { chromium } from 'playwright';
 import fs from 'fs';
-import { handleCookiePopup } from '../utils/helpers.js'; // Import helpers
+import { handleCookiePopup, launchBrowser } from '../utils/helpers.js'; // Import helpers
 
 // Specify the workflow to use
 import { SLMarketplaceWorkflow } from '../workflow/scripts/slMarketplaceWorkflow.js';
@@ -12,22 +12,14 @@ const credentials = JSON.parse(fs.readFileSync('./workflow/credentials.json', 'u
 // containing case/conditional statements to determine which workflow to use. 
 
 (async () => {
-    console.log("🚀 Launching browser...");
-    const browser = await chromium.launch({ headless: false });
 
-    console.log("🌍 Opening new page...");
-    const page = await browser.newPage();
-
-    console.log(`🔗 Navigating to: ${config.url}`);
-    await page.goto(config.url);
-
-    // Handle cookie popup using the reusable function
-    await handleCookiePopup(page);
+    // Launch browser using helper
+    const { browser, page } = await launchBrowser();
 
      // Initialise the workflow
      const slMarketplace = new SLMarketplaceWorkflow(page, config, credentials);
      await slMarketplace.navigateTo(config.url);
-
+     
      // Perform login
     await slMarketplace.login();
 
