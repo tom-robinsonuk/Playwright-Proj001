@@ -1,5 +1,5 @@
 # Playwright practice 
-Essentially this is just to practice Playwright/javascript test automation with a familiar website. however for context, This tool will automate the SL Virtual Marketplace and upload some products.
+Essentially this is just to practice Playwright/javascript Automation with a familiar website. however for context, This is just a tool to automate a root and follow instructors in a robotic way, there will be no testing included, other than basic validate checks to ensure successful execution. This tool will automate the SL Virtual Marketplace and upload some products.
 The framework is setup in a way to be dynamic making use of JSON data format for storing the unique selectors, and 'Workflow' for the scripts, leaving the testBed as just pure executor for simplicity.
 
 The plan for the tool is to just create a simple workflow script and matching config file to automate any website with very little maintenance/refactoring. 
