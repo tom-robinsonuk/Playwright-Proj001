@@ -1,0 +1,9 @@
+{
+    "url": "https://marketplace.secondlife.com/",
+    "selectors": {
+        "signInButton": ".nav__signin",
+        "usernameField": "#username",
+        "passwordField": "#password",
+        "loginButton": ".login-btn"
+    }
+  }
