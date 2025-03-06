@@ -1,7 +1,9 @@
-# Example Execution
+# Playwright practice 
+
+### Example Execution
 .\tests\basicTest.js
 
-# Updating credentials 
+### Updating credentials 
 1. Create a credentials.json within workflow/
 2.  follow this structure:
 {
