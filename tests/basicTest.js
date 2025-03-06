@@ -1,5 +1,6 @@
 import { chromium } from 'playwright';
 import fs from 'fs';
+import { handleCookiePopup } from '../utils/helpers.js'; // Import helpers
 
 // Read config files
 const config = JSON.parse(fs.readFileSync('./workflow/config.json', 'utf8'));
@@ -14,6 +15,9 @@ const credentials = JSON.parse(fs.readFileSync('./workflow/credentials.json', 'u
 
     console.log(`🔗 Navigating to: ${config.url}`);
     await page.goto(config.url);
+
+    // Handle cookie popup using the reusable function
+    await handleCookiePopup(page);
 
     console.log("🔍 Looking for 'Sign In' button...");
     await page.waitForSelector(config.selectors.signInButton, { timeout: 10000 });
@@ -40,6 +44,9 @@ const credentials = JSON.parse(fs.readFileSync('./workflow/credentials.json', 'u
 
     console.log("✅ Clicking 'Log In' button...");
     await page.click(config.selectors.loginButton);
+
+    // Handle cookie popup using the reusable function
+    await handleCookiePopup(page);
 
     console.log("⌛ Waiting before closing browser...");
     await page.waitForTimeout(5000);
