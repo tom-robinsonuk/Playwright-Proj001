@@ -5,7 +5,7 @@ The framework is setup in a way to be dynamic making use of JSON data format for
 The plan for the tool is to just create a simple workflow script and matching config file to automate any website with very little maintenance/refactoring. 
 
 ### Example Execution
-.\tests\basicTest.js
+node .\executor\basicExec.js
 
 ### Updating credentials 
 1. Create a credentials.json within workflow/
