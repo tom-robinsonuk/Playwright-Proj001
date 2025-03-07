@@ -35,6 +35,7 @@ const credentials = JSON.parse(fs.readFileSync('./workflow/credentials.json', 'u
     
     // Search for the product.
     await slMarketplace.searchListing();
+    await slMarketplace.selectCorrectListing();
 
     // Cleanup.
     console.log("⌛ Waiting before closing browser...");

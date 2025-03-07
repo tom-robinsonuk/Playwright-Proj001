@@ -7,8 +7,8 @@ export class SLMarketplaceWorkflow {
         this.setupWorkflow = setupWorkflow;
         this.credentials = credentials;
 
-        // Store products already checked
-        this.searchedProducts = new Set();
+        // Store extracted product listings
+        this.extractedListings = [];
     }
 
     async navigateTo(url) {
@@ -104,4 +104,52 @@ export class SLMarketplaceWorkflow {
         console.log("✅ Search executed successfully.");
 
     }
+
+    async selectCorrectListing() {
+        console.log("🔍 Extracting all search results...");
+    
+        // Wait for search results to appear
+        await this.page.waitForSelector(this.config.selectors.listingTable, { timeout: 10000 });
+    
+        // Get all listing rows
+        const listings = await this.page.$$(this.config.selectors.listingRow);
+    
+        console.log(`📜 Found ${listings.length} listings. Filtering correct one...`);
+    
+        for (const row of listings) {
+            const titleElement = await row.$(this.config.selectors.listingTitle);
+            if (!titleElement) continue;
+    
+            const titleText = await titleElement.innerText();
+            
+            if (titleText.includes(this.setupWorkflow.listingName)) {
+                console.log(`✅ Selecting correct product: ${titleText}`);
+    
+                // Click the "Actions" dropdown in the same row
+                const actionsButton = await row.$(this.config.selectors.actionsDropdown);
+                if (actionsButton) {
+                    console.log("🖱️ Clicking Actions dropdown...");
+                    await actionsButton.click();
+                } else {
+                    console.error("❌ Actions button not found!");
+                    return;
+                }
+    
+                // Click "Edit" within the same row
+                const editButton = await row.$(this.config.selectors.editButton);
+                if (editButton) {
+                    console.log("🖱️ Clicking 'Edit'...");
+                    await editButton.click();
+                    console.log("✅ Successfully navigated to the product edit page.");
+                    return;
+                } else {
+                    console.error("❌ Edit button not found!");
+                    return;
+                }
+            }
+        }
+    
+        console.error("❌ No matching listing found.");
+    }
+    
 }

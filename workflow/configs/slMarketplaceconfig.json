@@ -11,6 +11,12 @@
         "inventoryLink": "a.off:has-text('Inventory')",
         "manageListingsHeader": "h1:has-text('Manage listings')",
         "searchBox":"#keywords",
-        "searchButton": "input.button.utility-button[value='Search']"
+        "searchButton": "input.button.utility-button[value='Search']",
+        "listingTable": "table.inventory tbody",
+        "listingRow": "table.inventory tbody tr",
+        "listingTitle": "td.title a",
+        "listingQuantity": "td.qty-on-hand",
+        "actionsDropdown": "td:last-child .actions-title",
+        "editButton": "td:last-child a:has-text('Edit')"
     }
   }
