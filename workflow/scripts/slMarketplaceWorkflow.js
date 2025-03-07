@@ -1,10 +1,14 @@
 import { handleCookiePopup } from '../../utils/helpers.js';
 
 export class SLMarketplaceWorkflow {
-    constructor(page, config, credentials) {
+    constructor(page, config, setupWorkflow, credentials) {
         this.page = page;
         this.config = config;
+        this.setupWorkflow = setupWorkflow;
         this.credentials = credentials;
+
+        // Store products already checked
+        this.searchedProducts = new Set();
     }
 
     async navigateTo(url) {
@@ -81,5 +85,23 @@ export class SLMarketplaceWorkflow {
         console.log("🔍 Verifying Manage Listings page...");
         await this.page.waitForSelector(this.config.selectors.manageListingsHeader, { timeout: 10000 });
         console.log("✅ Manage Listings verified!");       
+    }
+
+    async searchListing() { 
+        console.log(`🔍 Searching for listing: ${this.setupWorkflow.listingName}`);
+
+        console.log("🔍 Waiting for search box...");
+        await this.page.waitForSelector(this.config.selectors.searchBox, { timeout: 10000 });
+
+        console.log("✍️ Typing listing name...");
+        await this.page.fill(this.config.selectors.searchBox, this.setupWorkflow.listingName);
+        console.log("🔍 Waiting for search button...");
+        await this.page.waitForSelector(this.config.selectors.searchButton, { timeout: 10000 });
+
+        console.log("🖱️ Clicking 'Search'...");
+        await this.page.click(this.config.selectors.searchButton);
+
+        console.log("✅ Search executed successfully.");
+
     }
 }

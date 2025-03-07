@@ -4,7 +4,9 @@ import { handleCookiePopup, launchBrowser } from '../utils/helpers.js'; // Impor
 
 // Specify the workflow to use
 import { SLMarketplaceWorkflow } from '../workflow/scripts/slMarketplaceWorkflow.js';
+
 // Read config files for the specified workflow
+const setupWorkflow = JSON.parse(fs.readFileSync('./workflow/setup/productInfo.json', 'utf-8'));
 const config = JSON.parse(fs.readFileSync('./workflow/configs/slMarketplaceconfig.json', 'utf8'));
 const credentials = JSON.parse(fs.readFileSync('./workflow/credentials.json', 'utf8'));
 
@@ -17,7 +19,7 @@ const credentials = JSON.parse(fs.readFileSync('./workflow/credentials.json', 'u
     const { browser, page } = await launchBrowser();
 
      // Initialise the workflow
-    const slMarketplace = new SLMarketplaceWorkflow(page, config, credentials);
+    const slMarketplace = new SLMarketplaceWorkflow(page, config, setupWorkflow, credentials);
 
     // Navigate and action the login.
     await slMarketplace.navigateTo(config.url);
@@ -31,12 +33,15 @@ const credentials = JSON.parse(fs.readFileSync('./workflow/credentials.json', 'u
     await slMarketplace.goToInventory();
     await slMarketplace.verifyManageListings();
     
+    // Search for the product.
+    await slMarketplace.searchListing();
+
     // Cleanup.
     console.log("⌛ Waiting before closing browser...");
     await page.waitForTimeout(5000);
     
     console.log("❌ Closing browser...");
-    await browser.close();
+    //await browser.close();
 
     console.log("✅ Test completed successfully.");
 })();
