@@ -64,8 +64,12 @@
         "distributionUsername": "#distribution_collaborator_login",
         "distributionPercentage": "#distribution_percentage",
         "distributionSubmit": "#submit-distribution",
+        "distributionEntry": ".distribution-id",
+        "distributionDeleteButton": ".distributions-delete",
 
-        "quickFillButton": "#copy-product-link"
+        "quickFillButton": "#copy-product-link",
+
+        "saveButton": "button.cart-button[type='submit']"
 
     }
   }

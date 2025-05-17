@@ -260,77 +260,169 @@ export class SLMarketplaceWorkflow {
         console.log("✅ Form filled out successfully.");
     }
 
-async addRelatedItems() {
-    const page = this.page;
-    const sel = this.config.selectors;
-    const relatedItems = this.setupWorkflow.productData?.relatedItems || [];
+    async addRelatedItems() {
+        const page = this.page;
+        const sel = this.config.selectors;
+        const relatedItems = this.setupWorkflow.productData?.relatedItems || [];
 
-    for (const itemName of relatedItems) {
-        console.log(`🔗 Adding related item: ${itemName}`);
+        for (const itemName of relatedItems) {
+            console.log(`🔗 Adding related item: ${itemName}`);
 
-        // Open related Items popup
-        await page.click(sel.relatedAddButton);
-        await page.waitForSelector(sel.relatedModal, { state: 'visible', timeout: 5000 });
-
-        // Fill and search
-        await page.fill(sel.relatedSearchBox, itemName);
-        await page.click(sel.relatedSearchSubmit);
-        await page.waitForSelector(sel.relatedSearchResults, { timeout: 5000 });
-
-        // Select result
-        const result = page.locator(`${sel.relatedResultByName}:has-text("${itemName}")`).first();
-        await result.waitFor({ state: 'visible', timeout: 5000 });
-        await result.click();
-
-        // Wait for either popup to close OR error message to appear
-        try {
-            await Promise.race([
-                page.waitForSelector(`${sel.relatedModal}`, { state: 'hidden', timeout: 5000 }),
-                page.waitForSelector('.errors .error', { timeout: 5000 })
-            ]);
-
-            const errorVisible = await page.isVisible('.errors .error');
-            if (errorVisible) {
-                const errorText = await page.textContent('.errors .error');
-                if (errorText.includes('related_product_already_associated')) {
-                    console.warn(`⚠️ Already associated: ${itemName}, skipping.`);
-                    await page.click(`${sel.relatedModal} .close`);
-                } else {
-                    console.error(`❌ Unexpected error while adding related item: ${errorText}`);
-                    await page.click(`${sel.relatedModal} .close`);
-                }
-            } else {
-                console.log(`✅ Related item added: ${itemName}`);
+            // ❗ SAFETY: If modal is still open, wait for it to close first
+            const stillOpen = await page.isVisible(sel.relatedModal);
+            if (stillOpen) {
+                console.warn("⚠️ Related modal still open from last item — waiting...");
+                await page.waitForSelector(sel.relatedModal, { state: 'hidden', timeout: 5000 });
             }
-        } catch (e) {
-            console.error(`❌ Timeout or unknown error adding related item: ${itemName}`, e);
+
+            // Open the modal fresh
+            await page.click(sel.relatedAddButton);
+            await page.waitForSelector(sel.relatedModal, { state: 'visible', timeout: 5000 });
+
+
+            // Type into search box
+            await page.fill(sel.relatedSearchBox, itemName);
+            await page.click(sel.relatedSearchSubmit);
+            await page.waitForSelector(sel.relatedSearchResults, { timeout: 5000 });
+
+            // Select the first matching result
+            const result = page.locator(`${sel.relatedResultByName}:has-text("${itemName}")`).first();
+            await result.waitFor({ state: 'visible', timeout: 5000 });
+            await result.click();
+
+            // Wait for EITHER popup to close or error to appear
+            try {
+                await Promise.race([
+                    page.waitForSelector(sel.relatedModal, { state: 'hidden', timeout: 5000 }),
+                    page.waitForSelector('.errors .error', { timeout: 5000 })
+                ]);
+
+                const errorVisible = await page.isVisible('.errors .error');
+                if (errorVisible) {
+                    const errorText = await page.textContent('.errors .error');
+                    if (errorText.includes('related_product_already_associated')) {
+                        console.warn(`⚠️ Already associated: ${itemName}, skipping.`);
+                    } else {
+                        console.error(`❌ Unexpected error while adding related item: ${errorText}`);
+                    }
+
+                    // Always close popup manually if error appears
+                    await page.click(`${sel.relatedModal} .close`);
+                    await page.waitForSelector(sel.relatedModal, { state: 'hidden', timeout: 5000 });
+                } else {
+                    console.log(`✅ Related item added: ${itemName}`);
+                }
+            } catch (e) {
+                console.error(`❌ Timeout or unknown error adding related item: ${itemName}`);
+                // Failsafe: force-close the popup if it's still stuck open
+                const stillOpen = await page.isVisible(sel.relatedModal);
+                if (stillOpen) {
+                    console.warn("⚠️ popup still open — force-closing...");
+                    await page.click(`${sel.relatedModal} .close`);
+                    await page.waitForSelector(sel.relatedModal, { state: 'hidden', timeout: 5000 });
+                }
+            }
+
+            // Short pause between items to avoid racing ahead
+            await page.waitForTimeout(500);
         }
+
+        console.log("🎯 Related item processing complete.");
     }
 
-    console.log("🎯 Related item processing complete.");
-}
 
 
-async addRevenueDistributions() {
-    const page = this.page;
-    const sel = this.config.selectors;
-    const distributions = this.setupWorkflow.productData?.revenueDistributions || [];
+    async addRevenueDistributions() {
+        const page = this.page;
+        const sel = this.config.selectors;
+        const distributions = this.setupWorkflow.productData?.revenueDistributions || [];
 
-    for (const entry of distributions) {
-        console.log(`💸 Adding revenue share: ${entry.username} - ${entry.percentage}%`);
+        for (const entry of distributions) {
+            const username = entry.username.trim();
+            const percentage = entry.percentage.trim();
 
-        // Open the popup
-        await page.click(sel.distributionAddButton);
-        await page.waitForSelector(sel.distributionModal, { state: 'visible', timeout: 5000 });
+            // Check if a distribution is already listed
+            const existingSelector = `.distribution-id:has-text("${username}")`;
+            const exists = await page.$(existingSelector);
 
-        // Fill form
-        await page.fill(sel.distributionUsername, entry.username);
-        await page.fill(sel.distributionPercentage, entry.percentage);
+            if (exists) {
+                const parent = await exists.evaluateHandle(el => el.closest('.distributions-form'));
+                const text = await parent.evaluate(el => el.innerText);
 
-        // Submit
-        await page.click(sel.distributionSubmit);
-        console.log(`✅ Distribution added: ${entry.username}`);
+                if (text.includes(`Percentage: ${percentage}%`)) {
+                    console.log(`✅ Distribution already correct for: ${username}`);
+                    continue; // Skip — it's correct
+                } else {
+                    console.log(`♻️ Distribution exists but has wrong percentage. Removing...`);
+                    const deleteButton = await parent.$('.distributions-delete');
+                    if (deleteButton) await deleteButton.click();
+                    await page.waitForTimeout(500);
+                }
+            }
+
+            console.log(`➕ Adding revenue share: ${username} - ${percentage}%`);
+
+            // Click to open modal
+            const buttonExists = await page.$(sel.distributionAddButton);
+            if (!buttonExists) {
+                console.warn("❌ Distribution add button not found — skipping this entry.");
+                continue;
+            }
+
+            await page.click(sel.distributionAddButton);
+            await page.waitForSelector(sel.distributionModal, { state: 'visible', timeout: 5000 });
+
+            // Fill and submit
+            await page.fill(sel.distributionUsername, username);
+            await page.fill(sel.distributionPercentage, percentage);
+            await page.click(sel.distributionSubmit);
+            await page.waitForTimeout(500); // short delay
+
+            console.log(`✅ Distribution added: ${username}`);
+        }
+
+        console.log("🎯 Revenue distribution section completed.");
     }
-}
+
+    async saveListing() {
+        const sel = this.config.selectors;
+        console.log("💾 Saving listing changes...");
+        await this.page.click(sel.saveButton);
+        await this.page.waitForTimeout(2000); // optional pause after saving
+        console.log("✅ Listing saved.");
+    }
+
+    async quickFillListing() {
+        const page = this.page;
+        const sel = this.config.selectors;
+
+        const sourceProduct = this.setupWorkflow.productData?.quickFillSource || "[POIZN] Jacket - FATPACK";
+
+        console.log(`⚡ Performing Quick Fill from: ${sourceProduct}`);
+
+        // Open the Quick Fill modal
+        await page.click(sel.quickFillButton);
+        await page.waitForSelector('#copy-product-chooser', { state: 'visible', timeout: 5000 });
+
+        // Target the correct field inside the modal (with visibility check)
+        const inputSelector = '#copy-product-chooser input#related_product_search_terms';
+        await page.waitForSelector(inputSelector, { state: 'visible', timeout: 5000 });
+
+        // Type and search
+        await page.fill(inputSelector, sourceProduct);
+        await page.click('#copy-product-chooser input[type="submit"][value="Search Products"]');
+
+        // Wait for results to appear
+        const resultSelector = '#copy-product-search-results a.select-product';
+        await page.waitForSelector(resultSelector, { timeout: 5000 });
+
+        const match = page.locator(resultSelector).first();
+        await match.click();
+
+        // Wait for modal to close
+        await page.waitForSelector('#copy-product-chooser', { state: 'hidden', timeout: 5000 });
+
+        console.log("✅ Quick Fill completed.");
+    }
 
 }

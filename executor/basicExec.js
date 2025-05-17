@@ -1,53 +1,58 @@
-import { chromium } from 'playwright';
 import fs from 'fs';
-import { handleCookiePopup, launchBrowser } from '../utils/helpers.js'; // Import helpers
-
-// Specify the workflow to use
+import { launchBrowser } from '../utils/helpers.js';
 import { SLMarketplaceWorkflow } from '../workflow/scripts/slMarketplaceWorkflow.js';
 
-// Read config files for the specified workflow
-const setupWorkflow = JSON.parse(fs.readFileSync('./workflow/setup/productInfo.json', 'utf-8'));
+// Load configs and credentials
+const fullConfig = JSON.parse(fs.readFileSync('./workflow/setup/productInfo.json', 'utf-8'));
 const config = JSON.parse(fs.readFileSync('./workflow/configs/slMarketplaceconfig.json', 'utf8'));
 const credentials = JSON.parse(fs.readFileSync('./workflow/credentials.json', 'utf8'));
 
-// Can add in an additional config param later on, which decides what walkthrough to use, this way we can have an additional script -
-// containing case/conditional statements to determine which workflow to use. 
+const products = fullConfig.products || [];
 
 (async () => {
+  const { browser, page } = await launchBrowser();
+  const slMarketplace = new SLMarketplaceWorkflow(page, config, {}, credentials);
 
-    // Launch browser using helper
-    const { browser, page } = await launchBrowser();
+  // Log in and get ready
+  await slMarketplace.navigateTo(config.url);
+  await slMarketplace.login();
+  await slMarketplace.goToMerchantHome();
+  await slMarketplace.verifyMerchantHome();
+  await slMarketplace.goToInventory();
+  await slMarketplace.verifyManageListings();
 
-     // Initialise the workflow
-    const slMarketplace = new SLMarketplaceWorkflow(page, config, setupWorkflow, credentials);
+  for (let index = 0; index < products.length; index++) {
+    const product = products[index];
+    console.log(`\n📦 Starting: ${product.listingName}`);
 
-    // Navigate and action the login.
-    await slMarketplace.navigateTo(config.url);
-    await slMarketplace.login();
-    
-    // Go to the merchant home area. 
-    await slMarketplace.goToMerchantHome();
-    await slMarketplace.verifyMerchantHome();
+    // Inject setupWorkflow into class instance
+    slMarketplace.setupWorkflow = product;
 
-    // Navigate to the merchant inventory.
-    await slMarketplace.goToInventory();
-    await slMarketplace.verifyManageListings();
-    
-    // Search for the product.
+    // Lookup and edit the listing
     await slMarketplace.searchListing();
+    await slMarketplace.extractListings();
     await slMarketplace.selectCorrectListing();
+    
+    await page.waitForTimeout(1000); // cooldown between listings
+    // Apply Quick Fill for all but first product
+    if (index > 0) {
+    console.log("⚙️ Performing quick fill for this variant...");
+    await slMarketplace.quickFillListing();
+    }
 
-    // Add the product. 
+    // Fill/edit the listing
     await slMarketplace.addProductListing();
     await slMarketplace.addRelatedItems();
     await slMarketplace.addRevenueDistributions();
+    await slMarketplace.saveListing();
 
-    // Cleanup.
-    console.log("⌛ Waiting before closing browser...");
-    await page.waitForTimeout(5000);
-    
-    console.log("❌ Closing browser...");
-    //await browser.close();
+    console.log(`✅ Finished editing: ${product.listingName}`);
+  }
 
-    console.log("✅ Test completed successfully.");
+  console.log("⌛ Waiting before closing browser...");
+  await page.waitForTimeout(3000);
+  console.log("❌ Closing browser...");
+  await browser.close();
+
+  console.log("✅ All products processed.");
 })();
