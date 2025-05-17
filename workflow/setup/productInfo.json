@@ -1,4 +1,34 @@
 {
-    "listingName":"Test Product",
-    "quantity":"1"
+  "listingName": "Test Product",
+  "quantity": "1",
+  "productData": {
+    "itemStatus": "Inactive",
+    "maturityLevel": "Moderate",
+    "mesh": "100% Mesh",
+    "usage": "unpacking",
+    "itemTitle": "Test Product",
+    "Product features": {
+      "1": "Maitreya, LaraX, flat chest, PetiteX LaraX Only",
+      "2": "Legacy, Perky,petite, Perkypetite, V-Tech, VTech, Bombshell, Pinup",
+      "3": "eBody Reborn + Reborn VTech",
+      "4": "Original, Artwork, 3D, Unique, Creative, Authentic",
+      "5": ""
+    },
+    "relatedItems": [
+      "[APPETITE] Kardi Cardigan - BLACK Single",
+      "[APPETITE] Kardi Skirt - BLACK Single",
+      "[APPETITE] Vali Dress - BLACK Single"
+    ],
+    "extendedDescription": "An edgy and artistic jacket for E-Girls.",
+    "keywords": "jacket, egirl, fashion, toxic, poizn",
+    "category": "Apparel",
+    "itemPrice": "269",
+    "slurl": "https://maps.secondlife.com/your-slurl-here",
+    "revenueDistributions": [
+        {
+            "username": "madison Bikergrrl",
+            "percentage": "100"
+        }
+    ]
+  }
 }

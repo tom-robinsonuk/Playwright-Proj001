@@ -3,11 +3,20 @@ import { chromium } from 'playwright';
 // Browser setup. // We can add more browsers here, and update with a fw.config to select the browser to launch with. 
 export async function launchBrowser() {
     console.log("🚀 Launching browser...");
-    const browser = await chromium.launch({ headless: false });
-    const page = await browser.newPage();
 
+    const browser = await chromium.launch({
+        headless: false,
+        args: ['--start-maximized'] // Maximize the window
+    });
+
+    const context = await browser.newContext({
+        viewport: null // Don't override the native window size
+    });
+
+    const page = await context.newPage();
     return { browser, page };
 }
+
 
 // Helper handler for cookie popup
 export async function handleCookiePopup(page) {

@@ -17,6 +17,55 @@
         "listingTitle": "td.title a",
         "listingQuantity": "td.qty-on-hand",
         "actionsDropdown": "td:last-child .actions-title",
-        "editButton": "td:last-child a:has-text('Edit')"
+        "editButton": "td:last-child a:has-text('Edit')",
+        "maturityGeneral": "#product_maturity_general",
+        "maturityModerate": "#product_maturity_moderate",
+        "maturityAdult": "#product_maturity_adult",
+
+        "meshNone": "#product_mesh_support_none",
+        "meshPartial": "#product_mesh_support_partial",
+        "meshFull": "#product_mesh_support_full",
+
+        "permCopy": "#product_copy_permission",
+        "permModify": "#product_modify_permission",
+        "permTransfer": "#product_transfer_permission",
+        "permSeeDescription": "#product_other_permission",
+        "permUserLicensed": "#product_user_licensed_permission",
+
+        "usageNone": "#product_usage_requirements_none",
+        "usageUnpacking": "#product_usage_requirements_unpacking",
+        "usageLand": "#product_usage_requirements_land",
+        "usageWearable": "#product_wearable",
+
+        "itemTitle": "#product_en-US_name",
+        "feature1": "#product_en-US_feature1",
+        "feature2": "#product_en-US_feature2",
+        "feature3": "#product_en-US_feature3",
+        "feature4": "#product_en-US_feature4",
+        "feature5": "#product_en-US_feature5",
+
+        "description": "#product_en-US_description",
+        "keywords": "#product_en-US_keywords",
+
+        "categoryChooser": "#product-category-chooser-link",
+        "itemPrice": "#product_price",
+        "slurl": "#product_slurl",
+        "addDistribution": "#add-distribution-link",
+
+        "relatedAddButton": "#add-related-product-link",
+        "relatedModal": "#related-product-chooser",
+        "relatedSearchBox": "#related_product_search_terms",
+        "relatedSearchSubmit": "input[type='submit'][value='Search Products']",
+        "relatedSearchResults": "#related-products-search-results",
+        "relatedResultByName": "a.select-product",
+
+        "distributionAddButton": "#add-distribution-link",
+        "distributionModal": "#distribution-chooser",
+        "distributionUsername": "#distribution_collaborator_login",
+        "distributionPercentage": "#distribution_percentage",
+        "distributionSubmit": "#submit-distribution",
+
+        "quickFillButton": "#copy-product-link"
+
     }
   }

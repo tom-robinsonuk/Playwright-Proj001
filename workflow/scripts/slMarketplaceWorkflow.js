@@ -17,6 +17,8 @@ export class SLMarketplaceWorkflow {
     }
 
     async login() {
+        // Handle cookie popup AFTER login / precaution.
+        await handleCookiePopup(this.page);
         // Navigate to the sign in page and action. 
         console.log("🔍 Looking for 'Sign In' button...");
         await this.page.waitForSelector(this.config.selectors.signInButton, { timeout: 10000 });
@@ -205,4 +207,130 @@ export class SLMarketplaceWorkflow {
     
         console.log("✅ All listings processed!");
     }
+
+    async addProductListing() {
+        const page = this.page;
+        const sel = this.config.selectors;
+        const data = this.setupWorkflow.productData;
+
+        console.log("📝 Filling out product listing form...");
+
+        // Set maturity level
+        const maturity = data.maturityLevel?.toLowerCase();
+        if (maturity === 'general') await page.check(sel.maturityGeneral);
+        else if (maturity === 'moderate') await page.check(sel.maturityModerate);
+        else if (maturity === 'adult') await page.check(sel.maturityAdult);
+
+        // Set Mesh Type
+        const mesh = data.mesh?.toLowerCase();
+        if (mesh === 'no mesh') await page.check(sel.meshNone);
+        else if (mesh === 'partial mesh') await page.check(sel.meshPartial);
+        else if (mesh === '100% mesh') await page.check(sel.meshFull);
+
+        // Permission checking... only check if true
+        const perms = data.permissions || {};
+        if (perms.copy) await page.check(sel.permCopy);
+        if (perms.modify) await page.check(sel.permModify);
+        if (perms.transfer) await page.check(sel.permTransfer);
+        if (perms.seeDescription) await page.check(sel.permSeeDescription);
+        if (perms.userLicensed) await page.check(sel.permUserLicensed);
+
+        // Usage Requirements
+        const usage = data.usage?.toLowerCase();
+        if (usage === 'none') await page.check(sel.usageNone);
+        else if (usage === 'unpacking') await page.check(sel.usageUnpacking);
+        else if (usage === 'land') await page.check(sel.usageLand);
+        if (usage === 'wearable') await page.check(sel.usageWearable);
+
+        // Basic Fields.
+        if (data.itemTitle) await page.fill(sel.itemTitle, data.itemTitle);
+
+        for (let i = 1; i <= 5; i++) {
+            const val = data['Product features']?.[i.toString()];
+            if (val) {
+                await page.fill(sel[`feature${i}`], val);
+            }
+        }
+
+        if (data.extendedDescription) await page.fill(sel.description, data.extendedDescription);
+        if (data.keywords) await page.fill(sel.keywords, data.keywords);
+        if (data.itemPrice) await page.fill(sel.itemPrice, data.itemPrice.toString());
+        if (data.slurl) await page.fill(sel.slurl, data.slurl);
+
+        console.log("✅ Form filled out successfully.");
+    }
+
+async addRelatedItems() {
+    const page = this.page;
+    const sel = this.config.selectors;
+    const relatedItems = this.setupWorkflow.productData?.relatedItems || [];
+
+    for (const itemName of relatedItems) {
+        console.log(`🔗 Adding related item: ${itemName}`);
+
+        // Open related Items popup
+        await page.click(sel.relatedAddButton);
+        await page.waitForSelector(sel.relatedModal, { state: 'visible', timeout: 5000 });
+
+        // Fill and search
+        await page.fill(sel.relatedSearchBox, itemName);
+        await page.click(sel.relatedSearchSubmit);
+        await page.waitForSelector(sel.relatedSearchResults, { timeout: 5000 });
+
+        // Select result
+        const result = page.locator(`${sel.relatedResultByName}:has-text("${itemName}")`).first();
+        await result.waitFor({ state: 'visible', timeout: 5000 });
+        await result.click();
+
+        // Wait for either popup to close OR error message to appear
+        try {
+            await Promise.race([
+                page.waitForSelector(`${sel.relatedModal}`, { state: 'hidden', timeout: 5000 }),
+                page.waitForSelector('.errors .error', { timeout: 5000 })
+            ]);
+
+            const errorVisible = await page.isVisible('.errors .error');
+            if (errorVisible) {
+                const errorText = await page.textContent('.errors .error');
+                if (errorText.includes('related_product_already_associated')) {
+                    console.warn(`⚠️ Already associated: ${itemName}, skipping.`);
+                    await page.click(`${sel.relatedModal} .close`);
+                } else {
+                    console.error(`❌ Unexpected error while adding related item: ${errorText}`);
+                    await page.click(`${sel.relatedModal} .close`);
+                }
+            } else {
+                console.log(`✅ Related item added: ${itemName}`);
+            }
+        } catch (e) {
+            console.error(`❌ Timeout or unknown error adding related item: ${itemName}`, e);
+        }
+    }
+
+    console.log("🎯 Related item processing complete.");
+}
+
+
+async addRevenueDistributions() {
+    const page = this.page;
+    const sel = this.config.selectors;
+    const distributions = this.setupWorkflow.productData?.revenueDistributions || [];
+
+    for (const entry of distributions) {
+        console.log(`💸 Adding revenue share: ${entry.username} - ${entry.percentage}%`);
+
+        // Open the popup
+        await page.click(sel.distributionAddButton);
+        await page.waitForSelector(sel.distributionModal, { state: 'visible', timeout: 5000 });
+
+        // Fill form
+        await page.fill(sel.distributionUsername, entry.username);
+        await page.fill(sel.distributionPercentage, entry.percentage);
+
+        // Submit
+        await page.click(sel.distributionSubmit);
+        console.log(`✅ Distribution added: ${entry.username}`);
+    }
+}
+
 }
