@@ -1,46 +1,188 @@
 {
   "products": [
     {
-      "listingName": "[POIZN] Jacket - FATPACK",
+      "listingName": "[APPETITE] XO Shirt - FATPACK",
       "quantity": "1",
       "productData": {
-        "itemTitle": "[POIZN] Jacket - FATPACK",
-        "itemPrice": "699",
-        "relatedItems": [],
-        "keywords": "fatpack, jacket, egirl",
-        "extendedDescription": "All colors included!",
+        "itemTitle": "[APPETITE] XO Shirt - FATPACK",
+        "itemPrice": "1499",
+        "maturityLevel": "Moderate",
+        "mesh": "100% Mesh",
+        "usage": "unpacking",
+        "permissions": {
+          "copy": true,
+          "modify": true,
+          "transfer": false,
+          "seeDescription": true,
+          "userLicensed": false
+        },
+        "Product features": {
+          "1": "Compatible with Maitreya, Legacy, and Reborn bodies",
+          "2": "Includes Flat, Petite, Perky, and V-Tech variations",
+          "3": "100% Original Mesh – Exclusive design",
+          "4": "Rigged for natural fit and movement. Fatpack is Modify & Copy",
+          "5": "Fatpack includes 20 Colour Options + 5 Unique Prints. Single Item includes 1 Colour – No Modify"
+        },
+        "extendedDescription": "XO Shirt is our newest release with fitted mesh support.\n\nAvailable for:\n♥ Legacy F, Perky, Petite, V-Tech, Bombshell\n♥ LaraX, PetiteX, Flat X (LaraX only)\n♥ eBody Reborn, Waifu, V-Tech\n\nOnly Fatpack is Modify, containing 20 Colour options and 5 unique designs.\nSingle items are no modify and one colour.\n\n|| Please take care prior to purchasing: to the image, description and to the demo's provided free inworld store. If you are reviewing because of a clothing size suggestion you would like to see this product updated with, consider contacting instead. If the description does not mention that size, the product does not include that size. If you are unsure please contact first ||",
+        "keywords": "Legacy,Maitreya,Reborn,Perky,Petite,VTech,Flat,Perkypetite,cropped shirt,egirl,anime style,hentai,mesh clothing,kawaii,top,XOXO,transparent,aesthetic,egirl,edgy,alternative,unique,special,new",
+        "relatedItems": [
+          "[APPETITE] XO Shirt - BLACK",
+          "[APPETITE] XO Shirt - WHITE",    
+          "[APPETITE] XO Shirt - RED",
+          "[APPETITE] XO Shirt - BLUE",  
+          "[APPETITE] XO Shirt - PINK"       
+        ],
         "revenueDistributions": [
           {
-            "username": "madison.Bikergrrl",
+            "username": "madison Bikergrrl",
             "percentage": "100"
           }
         ]
       }
     },
     {
-      "listingName": "[POIZN] Jacket - WHITE",
+      "listingName": "[APPETITE] XO Shirt - WHITE",
       "quantity": "1",
       "productData": {
-        "itemTitle": "[POIZN] Jacket - WHITE",
+        "itemTitle": "[APPETITE] XO Shirt - WHITE Single",
         "itemPrice": "269",
+        "permissions": {
+          "copy": true,
+          "modify": false,
+          "transfer": false,
+          "seeDescription": true,
+          "userLicensed": false
+        },
         "relatedItems": [
-          "[POIZN] Jacket - BLACK",
-          "[POIZN] Jacket - FATPACK"
+          "[APPETITE] XO Shirt - BLACK",
+          "[APPETITE] XO Shirt - FATPACK",    
+          "[APPETITE] XO Shirt - RED",
+          "[APPETITE] XO Shirt - BLUE",  
+          "[APPETITE] XO Shirt - PINK"    
         ],
-        "quickFillSource": "[POIZN] Jacket - FATPACK"
+        "quickFillSource": "[APPETITE] XO Shirt - FATPACK",
+        "revenueDistributions": [
+          {
+            "username": "madison Bikergrrl",
+            "percentage": "100"
+          }
+        ]
       }
     },
     {
-      "listingName": "[POIZN] Jacket - BLACK",
+      "listingName": "[APPETITE] XO Shirt - BLACK",
       "quantity": "1",
       "productData": {
-        "itemTitle": "[POIZN] Jacket - BLACK",
+        "itemTitle": "[APPETITE] XO Shirt - BLACK Single",
         "itemPrice": "269",
+        "permissions": {
+          "copy": true,
+          "modify": false,
+          "transfer": false,
+          "seeDescription": true,
+          "userLicensed": false
+        },
         "relatedItems": [
-          "[POIZN] Jacket - WHITE",
-          "[POIZN] Jacket - FATPACK"
+          "[APPETITE] XO Shirt - FATPACK",
+          "[APPETITE] XO Shirt - WHITE",    
+          "[APPETITE] XO Shirt - RED",
+          "[APPETITE] XO Shirt - BLUE",  
+          "[APPETITE] XO Shirt - PINK"    
         ],
-        "quickFillSource": "[POIZN] Jacket - FATPACK"
+        "quickFillSource": "[APPETITE] XO Shirt - FATPACK",
+        "revenueDistributions": [
+          {
+            "username": "madison Bikergrrl",
+            "percentage": "100"
+          }
+        ]
+      }
+    },
+    {
+      "listingName": "[APPETITE] XO Shirt - RED",
+      "quantity": "1",
+      "productData": {
+        "itemTitle": "[APPETITE] XO Shirt - RED Single",
+        "itemPrice": "269",
+        "permissions": {
+          "copy": true,
+          "modify": false,
+          "transfer": false,
+          "seeDescription": true,
+          "userLicensed": false
+        },
+        "relatedItems": [
+          "[APPETITE] XO Shirt - BLACK",
+          "[APPETITE] XO Shirt - WHITE",    
+          "[APPETITE] XO Shirt - FATPACK",
+          "[APPETITE] XO Shirt - BLUE",  
+          "[APPETITE] XO Shirt - PINK"    
+        ],
+        "quickFillSource": "[APPETITE] XO Shirt - FATPACK",
+        "revenueDistributions": [
+          {
+            "username": "madison Bikergrrl",
+            "percentage": "100"
+          }
+        ]
+      }
+    },
+    {
+      "listingName": "[APPETITE] XO Shirt - PINK",
+      "quantity": "1",
+      "productData": {
+        "itemTitle": "[APPETITE] XO Shirt - PINK Single",
+        "itemPrice": "269",
+        "permissions": {
+          "copy": true,
+          "modify": false,
+          "transfer": false,
+          "seeDescription": true,
+          "userLicensed": false
+        },
+        "relatedItems": [
+          "[APPETITE] XO Shirt - BLACK",
+          "[APPETITE] XO Shirt - WHITE",    
+          "[APPETITE] XO Shirt - RED",
+          "[APPETITE] XO Shirt - BLUE",  
+          "[APPETITE] XO Shirt - FATPACK"    
+        ],
+        "quickFillSource": "[APPETITE] XO Shirt - FATPACK",
+        "revenueDistributions": [
+          {
+            "username": "madison Bikergrrl",
+            "percentage": "100"
+          }
+        ]
+      }
+    },
+    {
+      "listingName": "[APPETITE] XO Shirt - BLUE",
+      "quantity": "1",
+      "productData": {
+        "itemTitle": "[APPETITE] XO Shirt - BLUE Single",
+        "itemPrice": "269",
+        "permissions": {
+          "copy": true,
+          "modify": false,
+          "transfer": false,
+          "seeDescription": true,
+          "userLicensed": false
+        },
+        "relatedItems": [
+          "[APPETITE] XO Shirt - BLACK",
+          "[APPETITE] XO Shirt - WHITE",    
+          "[APPETITE] XO Shirt - RED",
+          "[APPETITE] XO Shirt - FATPACK",
+          "[APPETITE] XO Shirt - PINK"
+        ],
+        "quickFillSource": "[APPETITE] XO Shirt - FATPACK",
+        "revenueDistributions": [
+          {
+            "username": "madison Bikergrrl",
+            "percentage": "100"
+          }
+        ]
       }
     }
   ]
